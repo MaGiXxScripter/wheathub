@@ -1,1 +1,127 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Wheat Hubs More Games", HidePremium = false, SaveConfig = true, ConfigFolder = "UI_Wheat_Hub"})
 
+local HttpService = game:GetService("HttpService")
+
+local lower = string.lower;
+request = http_request or request or HttpPost or syn.request
+local function join_server(code)
+    spawn(function()
+        pcall(function()
+            return request({
+                Url = "http://127.0.0.1:6463/rpc?v=1";
+                Method = "POST";
+                Body = HttpService:JSONEncode({
+                    cmd = "INVITE_BROWSER",
+                    args = {
+                        code = code
+                    },
+                    nonce = lower(HttpService:GenerateGUID(false))
+                });
+                Headers = {
+                    ["Content-Type"] = "application/json",
+                    ["Origin"] = "https://discord.com"
+                }
+            });
+        end)
+    end)
+end;
+
+join_server('wsbyxxCQuW')
+
+local Credits_Tab = Window:MakeTab({
+	Name = "Credits",
+	Icon = "",
+	PremiumOnly = false
+})
+
+Credits_Tab:AddButton({
+	Name = "MaGiXx#6964",
+	Callback = function()
+      	setclipboard("MaGiXx#6964")
+        join_server('wsbyxxCQuW')
+  	end    
+})
+
+Credits_Tab:AddButton({
+	Name = "Wheat Hub Discord",
+	Callback = function()
+      	setclipboard("https://discord.gg/wsbyxxCQuW")
+        join_server('wsbyxxCQuW')
+  	end    
+})
+
+local games = {
+    "Da Hood",
+    "Jailbreak",
+    "Pet Simulator X",
+    "Mining Simulator 2",
+    "Bedwars",
+    "Islands",
+    "Doors",
+    "Arsenal",
+    "Build A Boat For Treasure",
+    "Weapon Fighting Simulator",
+    "Anime Adventures",
+    "Bee Swarm Simulator",
+    "Tapping Simulator",
+    "Anime Fighting Simulator",
+    "World Zero",
+    "Rise of Nations",
+    "Bitcoin Miner",
+    "Retail Tycoon 2",
+    "One Punch Fighters",
+    "Prison Life",
+    "Ultra Power Tycoon",
+    "SHADOVIS RPG",
+    "Murder Mystery 2",
+    "Your Bizarre Adventure",
+    "Natural Disaster Survival",
+    "Evade",
+    "Combat Warriors",
+    "Blox Fruits",
+    "Grand Piece Online",
+    "Bee Swarm Simulator",
+    "King Legacy",
+    "Shindo Life",
+    "Anime Battle Arena",
+    "Rainbow Friends",
+    "Race Clicker",
+    "Dragon Blox",
+    "Adopt Me",
+    "Military Tycoon",
+    "Collect All Pets",
+    "Random Rumble",
+    "Encounters Fighting"
+}
+
+local Abbreviations = {"k", "M", "B", "T", "Qa", "Qn", "Sx", "Sp", "Oc", "N"}
+
+local function formatNumber(Number, Decimals)
+	return math.floor(((Number < 1 and Number) or math.floor(Number) / 10 ^ (math.log10(Number) - math.log10(Number) % 3)) * 10 ^ (Decimals or 3)) / 10 ^ (Decimals or 3)..(Abbreviations[math.floor(math.log10(Number) / 3)] or "")
+end
+
+for i, v in pairs(games) do
+    spawn(function()
+        local scripts_data = HttpService:JSONDecode(game:HttpGet("https://WheatHub.kelprepl.repl.co/search?game_name="..string.gsub(v," ", "%%20")))
+
+        local Tab = Window:MakeTab({
+            Name = v,
+            Icon = "rbxassetid://4483345998",
+            PremiumOnly = false
+        })
+
+        for i1, v1 in pairs(scripts_data) do
+            if string.match(v1.title:lower(), "^"..v:lower()) then
+                Tab:AddButton({
+                    Name = v1.title .. ' | ' .. formatNumber(v1.download_script) .. " used",
+                    Callback = function()
+                        local script = game:HttpGet("https://WheatHub.kelprepl.repl.co/get_script?url="..v1.url)
+                        loadstring(script)()
+                    end    
+                })    
+            end
+        end
+    end)
+    task.wait(.5)
+end
